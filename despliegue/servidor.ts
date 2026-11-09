@@ -67,7 +67,7 @@ Bun.serve({
           return Response.json({ error: `Acción desconocida: ${body.action ?? ""}` }, { status: 404 });
         }
         const result = await def.handler(ctx, body.args ?? {});
-        return Response.json(result ?? {});
+        return Response.json({ data: result ?? {} });
       } catch (err) {
         const msg = err instanceof Error ? err.message : "Error interno";
         // Los errores de negocio de actions.ts (ADMIN_NO_AUTORIZADO,
