@@ -1,0 +1,28 @@
+# Blueprint de Render para Cowboy Loot (plan gratis).
+#
+# Cómo se usa: en Render, "New +" -> "Blueprint", conectas el repositorio
+# que contiene esta carpeta y Render crea el servicio con esta
+# configuración. La variable DATABASE_URL NO va aquí: se pega a mano en
+# el panel del servicio (Environment) con la cadena de conexión de Neon,
+# para que la contraseña de la base de datos nunca quede en el código.
+#
+# Notas del plan gratis de Render:
+# - El servicio se duerme tras ~15 min sin visitas y tarda ~1 min en
+#   despertar en la primera visita. Los datos NO se pierden: viven en
+#   Neon (Postgres externo), no en el disco efímero de Render.
+# - 750 horas/mes gratis: alcanza para un servicio encendido siempre
+#   que se duerma cuando nadie juega.
+
+services:
+  - type: web
+    name: cowboy-loot
+    runtime: node
+    plan: free
+    buildCommand: bun install && mkdir -p public && cp -r ../client/dist/. public/
+    startCommand: bun servidor.ts
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: NODE_ENV
+        value: production
+    healthCheckPath: /salud
